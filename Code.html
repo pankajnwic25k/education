@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPortal - Open Source Learning Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #666;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .upload-section h3 {
+            margin-bottom: 15px;
+            color: #764ba2;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .categories {
+            list-style: none;
+        }
+
+        .categories li {
+            padding: 12px 15px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .categories li:hover, .categories li.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .search-bar button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .resource-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .resource-thumbnail {
+            height: 160px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .resource-info {
+            padding: 20px;
+        }
+
+        .resource-info h4 {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .resource-info p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .badge {
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .player-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .player-section.active {
+            display: block;
+        }
+
+        .video-player {
+            width: 100%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            max-height: 500px;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        .github-corner {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <!-- GitHub Corner -->
+    <a href="https://github.com/yourusername/eduportal" class="github-corner" target="_blank">
+        <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#667eea; color:#fff; position: absolute; top: 0; border: 0; right: 0;">
+            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+            <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+            <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path>
+        </svg>
+    </a>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>📚 EduPortal</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="active">Dashboard</a>
+                <a href="#">Courses</a>
+                <a href="#">Resources</a>
+                <a href="#">Community</a>
+                <a href="#">Profile</a>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="upload-section">
+                    <h3>Upload Resource</h3>
+                    <label for="fileUpload" class="upload-btn">
+                        📤 Upload PDF/Video
+                    </label>
+                    <input type="file" id="fileUpload" accept=".pdf,video/*" multiple>
+                    <p style="margin-top: 10px; font-size: 12px; color: #666;">Supported: PDF, MP4, WebM, MOV</p>
+                </div>
+
+                <h3>Categories</h3>
+                <ul class="categories">
+                    <li class="active" data-category="all">📋 All Resources</li>
+                    <li data-category="pdf">📄 PDF Documents</li>
+                    <li data-category="video">🎥 Video Lectures</li>
+                    <li data-category="mathematics">📐 Mathematics</li>
+                    <li data-category="science">🔬 Science</li>
+                    <li data-category="programming">💻 Programming</li>
+                    <li data-category="language">🌐 Languages</li>
+                </ul>
+
+                <div style="margin-top: 30px;">
+                    <h3>Recent Activity</h3>
+                    <div id="recentActivity" style="margin-top: 15px;">
+                        <p style="color: #666; font-size: 14px;">No recent activity</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search resources...">
+                    <button onclick="searchResources()">Search</button>
+                </div>
+
+                <div id="resourcesContainer">
+                    <div class="resources-grid" id="resourcesGrid">
+                        <!-- Resources will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="player-section" id="playerSection">
+                    <h2 id="currentResourceTitle"></h2>
+                    <div id="playerContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for fullscreen viewing -->
+    <div class="modal" id="resourceModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Educational Resources Database
+        let resources = [
+            {
+                id: 1,
+                title: "Introduction to Mathematics",
+                type: "pdf",
+                category: "mathematics",
+                url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                thumbnail: "📐",
+                description: "Basic mathematics concepts for beginners",
+                size: "2.5 MB",
+                date: "2024-01-15"
+            },
+            {
+                id: 2,
+                title: "JavaScript Fundamentals",
+                type: "video",
+                category: "programming",
+                url: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                thumbnail: "💻",
+                description: "Learn JavaScript from scratch",
+                duration: "45:30",
+                date: "2024-01-20"
+            },
+            {
+                id: 3,
+                title: "Physics 101",
+                type: "pdf",
+                category: "science",
+                url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                thumbnail: "🔬",
+                description: "Introduction to basic physics",
+                size: "3.1 MB",
+                date: "2024-01-18"
+            },
+            {
+                id: 4,
+                title: "English Grammar",
+                type: "video",
+                category: "language",
+                url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                thumbnail: "🌐",
+                description: "Complete English grammar course",
+                duration: "60:15",
+                date: "2024-01-22"
+            }
+        ];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            displayResources();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // File upload handler
+            document.getElementById('fileUpload').addEventListener('change', handleFileUpload);
+
+            // Category click handler
+            document.querySelectorAll('.categories li').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.categories li').forEach(li => li.classList.remove('active'));
+                    this.classList.add('active');
+                    filterByCategory(this.dataset.category);
+                });
+            });
+
+            // Search on enter key
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchResources();
+                }
+            });
+        }
+
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            
+            for (let file of files) {
+                const fileType = file.type.includes('pdf') ? 'pdf' : 'video';
+                const newResource = {
+                    id: resources.length + 1,
+                    title: file.name,
+                    type: fileType,
+                    category: 'all',
+                    url: URL.createObjectURL(file),
+                    thumbnail: fileType === 'pdf' ? '📄' : '🎥',
+                    description: `Uploaded ${fileType} file`,
+                    size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+                    date: new Date().toISOString().split('T')[0]
+                };
+
+                resources.unshift(newResource);
+                
+                // Add to recent activity
+                addToRecentActivity(`Uploaded: ${file.name}`);
+            }
+
+            displayResources();
+            event.target.value = ''; // Reset input
+        }
+
+        function addToRecentActivity(activity) {
+            const recentDiv = document.getElementById('recentActivity');
+            const activityElement = document.createElement('p');
+            activityElement.style.cssText = 'color: #666; font-size: 14px; margin: 5px 0;';
+            activityElement.textContent = `• ${activity}`;
+            recentDiv.insertBefore(activityElement, recentDiv.firstChild);
+            
+            // Keep only last 5 activities
+            if (recentDiv.children.length > 5) {
+                recentDiv.removeChild(recentDiv.lastChild);
+            }
+        }
+
+        function displayResources(resourcesToShow = resources) {
+            const grid = document.getElementById('resourcesGrid');
+            grid.innerHTML = '';
+
+            resourcesToShow.forEach(resource => {
+                const card = createResourceCard(resource);
+                grid.appendChild(card);
+            });
+        }
+
+        function createResourceCard(resource) {
+            const card = document.createElement('div');
+            card.className = 'resource-card';
+            card.onclick = () => openResource(resource);
+
+            const metaInfo = resource.type === 'pdf' 
+                ? `<span class="badge">PDF</span> <span>${resource.size}</span>`
+                : `<span class="badge">Video</span> <span>${resource.duration || '00:00'}</span>`;
+
+            card.innerHTML = `
+                <div class="resource-thumbnail">${resource.thumbnail}</div>
+                <div class="resource-info">
+                    <h4>${resource.title}</h4>
+                    <p>${resource.description}</p>
+                    <div class="resource-meta">
+                        ${metaInfo}
+                        <span>${resource.date}</span>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function openResource(resource) {
+            const playerSection = document.getElementById('playerSection');
+            const playerContainer = document.getElementById('playerContainer');
+            const title = document.getElementById('currentResourceTitle');
+
+            title.textContent = resource.title;
+            playerContainer.innerHTML = '';
+
+            if (resource.type === 'pdf') {
+                playerContainer.innerHTML = `<iframe class="pdf-viewer" src="${resource.url}" frameborder="0"></iframe>`;
+            } else {
+                playerContainer.innerHTML = `
+                    <div class="video-player">
+                        <video controls>
+                            <source src="${resource.url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                `;
+            }
+
+            playerSection.classList.add('active');
+            
+            // Scroll to player
+            playerSection.scrollIntoView({ behavior: 'smooth' });
+            
+            addToRecentActivity(`Viewed: ${resource.title}`);
+        }
+
+        function filterByCategory(category) {
+            if (category === 'all') {
+                displayResources(resources);
+            } else {
+                const filtered = resources.filter(r => r.category === category || r.type === category);
+                displayResources(filtered);
+            }
+        }
+
+        function searchResources() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm.trim() === '') {
+                displayResources(resources);
+                return;
+            }
+
+            const filtered = resources.filter(resource => 
+                resource.title.toLowerCase().includes(searchTerm) ||
+                resource.description.toLowerCase().includes(searchTerm) ||
+                resource.category.toLowerCase().includes(searchTerm)
+            );
+
+            displayResources(filtered);
+            
+            if (filtered.length === 0) {
+                document.getElementById('resourcesGrid').innerHTML = 
+                    '<p style="text-align: center; grid-column: 1/-1; padding: 50px;">No resources found</p>';
+            }
+        }
+
+        function openFullscreen(resource) {
+            const modal = document.getElementById('resourceModal');
+            const modalContent = document.getElementById('modalContent');
+
+            if (resource.type === 'pdf') {
+                modalContent.innerHTML = `<iframe class="pdf-viewer" src="${resource.url}" style="height: 80vh;" frameborder="0"></iframe>`;
+            } else {
+                modalContent.innerHTML = `
+                    <video controls style="width: 100%; max-height: 80vh;">
+                        <source src="${resource.url}" type="video/mp4">
+                    </video>
+                `;
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('resourceModal').style.display = 'none';
+            document.getElementById('modalContent').innerHTML = '';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('resourceModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Sample function to add YouTube video
+        function addYouTubeVideo(videoId, title, category) {
+            const newResource = {
+                id: resources.length + 1,
+                title: title,
+                type: 'video',
+                category: category,
+                url: `https://www.youtube.com/embed/${videoId}`,
+                thumbnail: '🎥',
+                description: 'YouTube video resource',
+                duration: 'Unknown',
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            resources.push(newResource);
+            displayResources();
+        }
+
+        // Initialize with some sample data
+        console.log('EduPortal initialized with', resources.length, 'resources');
+    </script>
+
+    <!-- Optional: Add some sample educational content -->
+    <div style="display: none;">
+        <!-- Hidden elements for additional functionality -->
+    </div>
+</body>
+</html>
